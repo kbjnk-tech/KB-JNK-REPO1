@@ -1,4 +1,5 @@
-import type { CurrencyCode } from '@/entities/currency'
+/** API 통화 코드 (entities CurrencyCode와 동일 유니온 — shared→entities 역의존 방지) */
+export type ApiCurrencyCode = 'USD' | 'JPY' | 'EUR' | 'CNY'
 
 interface EximRow {
   cur_unit?: string
@@ -13,7 +14,7 @@ function parseRate(raw: string): number {
   return Number(raw.replace(/,/g, ''))
 }
 
-function mapCurrencyUnit(code: CurrencyCode): string {
+function mapCurrencyUnit(code: ApiCurrencyCode): string {
   if (code === 'JPY') return 'JPY(100)'
   return code
 }
@@ -22,7 +23,7 @@ function mapCurrencyUnit(code: CurrencyCode): string {
  * 한국수출입은행 현재환율 API
  * 개발: Vite proxy `/api/exim` · 키 없거나 실패 시 throw → UI fallback
  */
-export async function fetchBaseRate(currency: CurrencyCode): Promise<number> {
+export async function fetchBaseRate(currency: ApiCurrencyCode): Promise<number> {
   const key = import.meta.env.VITE_EXCHANGE_API_KEY as string | undefined
   if (!key) {
     throw new Error('환율 API 키가 없습니다 (.env의 VITE_EXCHANGE_API_KEY).')

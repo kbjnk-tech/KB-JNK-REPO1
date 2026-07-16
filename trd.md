@@ -288,7 +288,7 @@ export interface Transaction {
 | 항목 | 구현 위치 | 설계 |
 |------|-----------|------|
 | 반응형 | `pages`·`widgets`·`shared/ui` | Tailwind `sm:`/`lg:` 등 브레이크포인트, 좁은 폭에서 1열 스택 |
-| 다크모드 | `shared/ui/ThemeToggle`, `shared/lib` 테마 저장 | `html.dark` 클래스 + Tailwind `@custom-variant dark`, `localStorage` 유지 (미선택 시 `prefers-color-scheme`) |
+| 다크모드 | `shared/ui/ThemeToggle`, `shared/lib` 테마 저장 | `html.dark` 클래스 + Tailwind `@custom-variant dark`, `localStorage` 유지 |
 | 인쇄 | `transaction-history-panel` + `index.css` | `window.print()`, `.no-print`로 계산·동기화·검색/삭제 숨김, `.print-area`에 거래 목록만 출력 |
 
 - 도메인 계산·CSV 직렬화와 분리된 **표시/테마/인쇄** 관심사
@@ -364,17 +364,17 @@ export interface Transaction {
 
 ### 7.3 아키텍처·산출물 체크리스트
 
-- [ ] FSD 레이어로 폴더 분리
-- [ ] 의존 방향·Public API 준수
-- [ ] 환율/송금 계산 = 순수 함수
-- [ ] `.cursor/rules/` Always(00·01) + file-specific(10·20·25·30·40~43) — 역할별 2개 이상
-- [ ] `docs/ARCHITECTURE.md`, `WORKFLOW.md`, `PRD.md`, `prompts.md`, `README.md`
-- [ ] Vitest 통과
-- [ ] 송금 탭·CSV·환율 API 동작
-- [ ] 반응형·다크모드·인쇄 (F-9) 동작
-- [ ] `.coderabbit.yaml`, `.cursor/mcp.json`
-- [ ] Custom Mode / WORKFLOW 기록
-- [ ] Supabase + Vercel URL
+- [x] FSD 레이어로 폴더 분리
+- [x] 의존 방향·Public API 준수
+- [x] 환율/송금 계산 = 순수 함수
+- [x] `.cursor/rules/` Always(00·01) + file-specific(10·20·25·30·40~43) — 역할별 2개 이상
+- [x] `docs/ARCHITECTURE.md`, `WORKFLOW.md`, `PRD.md`, `prompts.md`, `README.md`
+- [x] Vitest 통과
+- [x] 송금 탭·CSV·환율 API 동작
+- [x] 반응형·다크모드·인쇄 (F-9) 동작
+- [x] `.coderabbit.yaml`, `.cursor/mcp.json`
+- [x] Custom Mode / WORKFLOW 기록
+- [x] Supabase + Vercel URL
 
 ---
 

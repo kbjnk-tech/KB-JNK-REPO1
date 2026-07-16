@@ -1,1 +1,1 @@
-export { fetchBaseRate } from './fetchBaseRate'
+export { fetchBaseRate, type ApiCurrencyCode } from './fetchBaseRate'
