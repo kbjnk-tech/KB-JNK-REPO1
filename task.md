@@ -280,6 +280,12 @@
 
 ## Phase 6 — MCP · Custom Mode · 협업 문서
 
+### Phase 6 체크리스트
+
+- [x] T-6.1 `.cursor/mcp.json` 최종화 (filesystem · context7, 시크릿 없음)
+- [x] T-6.2 Custom Mode Plan / Implement / Review + WORKFLOW 기록
+- [x] T-6.3 `docs/prompts.md` 모드별 프롬프트 정리
+
 | ID | Task | 난이도 | 근거 | 완료 기준 |
 |----|------|--------|------|-----------|
 | T-6.1 | `.cursor/mcp.json` 최종화 (context7 등) | 2 | PRD ADV-6, F-8.2 / TRD Phase 6 | mcp.json 동작, 시크릿 미커밋 |
