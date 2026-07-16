@@ -35,9 +35,7 @@ export function DashboardPage() {
         const cached = loadTransactions()
         setTransactions(cached)
         setStatusMessage(
-          remote.message
-            ? `${remote.message} (${cached.length}건)`
-            : null,
+          `${remote.message} (캐시 ${cached.length}건으로 표시)`,
         )
       }
       setBooting(false)
@@ -49,20 +47,20 @@ export function DashboardPage() {
     }
   }, [])
 
-  /** 화면 + localStorage 즉시 반영 (필수: 새로고침 유지) */
-  function persistLocal(next: Transaction[]) {
+  /** 화면 즉시 반영 + 캐시 백업 (주 저장은 Supabase) */
+  function persistCache(next: Transaction[]) {
     setTransactions(next)
     saveTransactions(next)
   }
 
   async function handleSave(tx: Transaction) {
-    persistLocal([tx, ...transactions])
+    persistCache([tx, ...transactions])
     const result = await upsertTransactionToCloud(tx)
     setStatusMessage(result.ok ? null : result.message)
   }
 
   async function handleDelete(id: string) {
-    persistLocal(transactions.filter((t) => t.id !== id))
+    persistCache(transactions.filter((t) => t.id !== id))
     const result = await deleteTransactionFromCloud(id)
     setStatusMessage(result.ok ? null : result.message)
   }
@@ -79,16 +77,16 @@ export function DashboardPage() {
               대시보드
             </h1>
             <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-              환전·해외송금 계산과 거래 기록을 한 화면에서 관리합니다. 기록은
-              localStorage에 저장되며, Supabase가 설정되어 있으면 클라우드에도
-              자동 반영됩니다.
+              환전·해외송금 계산과 거래 기록을 한 화면에서 관리합니다. 기록의 주
+              저장소는 Supabase이며, 연결 실패 시에만 localStorage 캐시로
+              표시합니다.
             </p>
           </div>
           <ThemeToggle />
         </div>
         {booting ? (
           <p className="mt-2 text-sm text-slate-600 dark:text-slate-400" role="status">
-            기록을 불러오는 중…
+            클라우드에서 기록을 불러오는 중…
           </p>
         ) : statusMessage ? (
           <p className="mt-2 text-sm text-slate-600 dark:text-slate-400" role="status">

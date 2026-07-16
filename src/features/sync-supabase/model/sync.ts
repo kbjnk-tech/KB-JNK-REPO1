@@ -42,13 +42,17 @@ function fromRow(r: Record<string, unknown>): Transaction {
   }
 }
 
-/** 단건 upsert — (선택) Supabase 반영. 미설정 시 localStorage만 사용 */
+/** 단건 upsert — 주 저장소(Supabase) 반영 */
 export async function upsertTransactionToCloud(
   row: Transaction,
 ): Promise<SyncResult> {
   const supabase = getSupabaseClient()
   if (!supabase) {
-    return { ok: true, message: '' }
+    return {
+      ok: false,
+      message:
+        'Supabase 환경변수가 없습니다. 주 저장소에 쓰지 못했고 localStorage 캐시만 갱신했습니다.',
+    }
   }
 
   try {
@@ -56,7 +60,7 @@ export async function upsertTransactionToCloud(
     if (error) {
       return {
         ok: false,
-        message: `클라우드 저장 실패: ${error.message}. localStorage에는 저장되어 있습니다.`,
+        message: `클라우드 저장 실패: ${error.message}. localStorage 캐시는 갱신됩니다.`,
       }
     }
     return { ok: true, message: '' }
@@ -64,18 +68,22 @@ export async function upsertTransactionToCloud(
     const msg = e instanceof Error ? e.message : '알 수 없는 오류'
     return {
       ok: false,
-      message: `클라우드 저장 실패: ${msg}. localStorage에는 저장되어 있습니다.`,
+      message: `클라우드 저장 실패: ${msg}. localStorage 캐시는 갱신됩니다.`,
     }
   }
 }
 
-/** 단건 삭제 — (선택) Supabase 반영. 미설정 시 localStorage만 사용 */
+/** 단건 삭제 — 주 저장소(Supabase) 반영 */
 export async function deleteTransactionFromCloud(
   id: string,
 ): Promise<SyncResult> {
   const supabase = getSupabaseClient()
   if (!supabase) {
-    return { ok: true, message: '' }
+    return {
+      ok: false,
+      message:
+        'Supabase 환경변수가 없습니다. 주 저장소에서 삭제하지 못했고 localStorage 캐시만 갱신했습니다.',
+    }
   }
 
   try {
@@ -83,7 +91,7 @@ export async function deleteTransactionFromCloud(
     if (error) {
       return {
         ok: false,
-        message: `클라우드 삭제 실패: ${error.message}. localStorage에는 반영되어 있습니다.`,
+        message: `클라우드 삭제 실패: ${error.message}. localStorage 캐시는 갱신됩니다.`,
       }
     }
     return { ok: true, message: '' }
@@ -91,12 +99,12 @@ export async function deleteTransactionFromCloud(
     const msg = e instanceof Error ? e.message : '알 수 없는 오류'
     return {
       ok: false,
-      message: `클라우드 삭제 실패: ${msg}. localStorage에는 반영되어 있습니다.`,
+      message: `클라우드 삭제 실패: ${msg}. localStorage 캐시는 갱신됩니다.`,
     }
   }
 }
 
-/** (선택) Supabase에서 조회. 미설정·실패 시 호출측이 localStorage를 사용 */
+/** 주 저장소(Supabase)에서 조회. 실패 시 호출측이 localStorage 캐시 사용 */
 export async function pullTransactionsFromCloud(): Promise<{
   ok: boolean
   rows: Transaction[]
@@ -107,7 +115,8 @@ export async function pullTransactionsFromCloud(): Promise<{
     return {
       ok: false,
       rows: [],
-      message: '',
+      message:
+        'Supabase 환경변수가 없습니다. 주 저장소 대신 localStorage 캐시를 사용합니다.',
     }
   }
 
@@ -121,7 +130,7 @@ export async function pullTransactionsFromCloud(): Promise<{
       return {
         ok: false,
         rows: [],
-        message: `클라우드 조회 실패: ${error.message}. localStorage 기록을 표시합니다.`,
+        message: `클라우드 조회 실패: ${error.message}. localStorage 캐시를 사용합니다.`,
       }
     }
 
@@ -136,7 +145,7 @@ export async function pullTransactionsFromCloud(): Promise<{
     return {
       ok: false,
       rows: [],
-      message: `클라우드 조회 실패: ${msg}. localStorage 기록을 표시합니다.`,
+      message: `클라우드 조회 실패: ${msg}. localStorage 캐시를 사용합니다.`,
     }
   }
 }

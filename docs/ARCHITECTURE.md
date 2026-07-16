@@ -9,7 +9,7 @@
 |------|------|
 | UI | React 19 + Vite + TypeScript + Tailwind CSS v4 |
 | 상태 | useState / useReducer (필요 시 Context) |
-| 영속화 | localStorage (필수) + (선택) Supabase 자동 동기화 |
+| 영속화 | **Supabase** 주 저장 + localStorage 캐시/오프라인 |
 | UI 확장 | 반응형 · 다크모드(`html.dark`) · 인쇄(`@media print`) |
 | 테스트 | Vitest |
 | 배포 | Vercel |

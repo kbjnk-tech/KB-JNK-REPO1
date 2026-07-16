@@ -314,9 +314,9 @@
 
 #### T-7.2 `features/sync-supabase` + 오프라인 fallback `[난이도: 6/10]`
 
-- **근거:** PRD F-7.1, E-7.1 / TRD 5.4 (localStorage 필수 + Supabase 선택 자동 동기화)
-- **작업:** 시작 시 pull(설정 시), 추가/삭제 시 upsert/delete, 실패 시 localStorage만으로 계속
-- **완료:** README에 저장 전략 명시, E-7.1 만족. 수동 sync 버튼은 명세 불필요로 미포함
+- **근거:** PRD F-7.1, E-7.1·E-7.2 / TRD 5.4 (**전략 A**: Supabase 주 + localStorage 캐시)
+- **작업:** 시작 시 pull, 추가/삭제 시 upsert/delete, 실패 시 캐시 계속 + 안내
+- **완료:** README에 전략 A 명시, E-7.1·E-7.2 만족. 수동 sync 버튼 미포함
 
 #### T-7.3 Vercel 배포 + env 설정 `[난이도: 4/10]`
 

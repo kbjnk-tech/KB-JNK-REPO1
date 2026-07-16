@@ -36,11 +36,11 @@ npm run build
 - 전신료(해외): **8,000원/건**
 - 현찰 스프레드 기본 **1.75%**, 전신환 **1.0%**
 
-## 저장 전략
+## 저장 전략 (가산: Supabase 주 저장)
 
-- **필수:** `localStorage` — 추가/삭제 즉시 저장, 새로고침 후에도 유지 (명세서 1-2)
-- **가산(선택):** Supabase — env·테이블이 있으면 시작 시 불러오기·추가/삭제 시 자동 반영
-- Supabase 실패·미설정 시에도 localStorage만으로 정상 사용 가능 (**E-7.1**)
+- **주 저장소:** Supabase `transactions` — 앱 시작 시 로드, 추가/삭제 시 자동 반영
+- **캐시/오프라인:** `localStorage` — 키 없음·네트워크·테이블 오류 시에만 fallback (**E-7.1**)
+- 배포본·로컬 모두 `.env` / Vercel env에 Supabase 키가 있어야 클라우드가 동작합니다
 
 ### Supabase 테이블 (SQL 예시)
 

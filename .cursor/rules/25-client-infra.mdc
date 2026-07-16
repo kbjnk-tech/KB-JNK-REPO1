@@ -23,7 +23,7 @@ alwaysApply: false
 ## Supabase · sync
 
 - 클라이언트: `shared/supabase` · 테이블 예: `transactions` ↔ Transaction 스키마
-- **전략:** localStorage = 필수 영속화, Supabase = 선택 클라우드 동기화 (README 명시)
+- **전략 A (채택):** Supabase = 주 저장소, localStorage = 캐시/오프라인 (README 명시)
 - 시작 시 클라우드 조회 → 실패 시 localStorage 캐시 + 안내 (**E-7.1**)
 - 추가/삭제는 클라우드 반영을 시도하고, 실패해도 로컬 캐시로 계속 사용
 - 여러 기기·탭에서는 **마지막 쓰기**가 남을 수 있음 (안내 문구)
