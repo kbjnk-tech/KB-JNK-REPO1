@@ -187,11 +187,11 @@
 - **작업:** 고객명·통화·메모 키워드 필터
 - **완료:** 검색 시 해당 기록만 표시
 
-#### T-3B.3 localStorage 영속화 `[난이도: 4/10]`
+#### T-3B.3 localStorage 캐시 영속화 `[난이도: 4/10]`
 
-- **근거:** PRD MVP-3, F-2.4, §6.3 / TRD 1.1, 2.3-4
-- **작업:** 추가/삭제 후 저장, entities 계산과 분리된 저장 계층
-- **완료:** 새로고침·재오픈 후 목록·삭제 상태 유지
+- **근거:** PRD MVP-3, F-2.4, E-7.1 / TRD 1.1, 2.3-4
+- **작업:** 추가/삭제 후 캐시 저장, entities 계산과 분리된 저장 계층 (주 저장은 Phase 7 Supabase)
+- **완료:** 오프라인·클라우드 실패 시에도 목록 유지
 
 #### T-3B.4 `widgets/transaction-history-panel` (추가·삭제·검색 UI) `[난이도: 5/10]`
 
@@ -301,7 +301,7 @@
 ### Phase 7 체크리스트
 
 - [x] T-7.1 Supabase 클라이언트·`transactions` 테이블 (프로젝트 `excahngemoney`, RLS·anon upsert/select 확인)
-- [x] T-7.2 `features/sync-supabase` + 오프라인 fallback (README 전략 B, 실동기화 OK)
+- [x] T-7.2 `features/sync-supabase` + 오프라인 fallback (README **전략 A**: Supabase 주 + localStorage 캐시)
 - [x] T-7.3 Vercel 배포 + env — https://kb-fx-teller-helper.vercel.app
 
 ### T-7 — 클라우드 저장 · 배포 (분리됨)
@@ -314,9 +314,9 @@
 
 #### T-7.2 `features/sync-supabase` + 오프라인 fallback `[난이도: 6/10]`
 
-- **근거:** PRD F-7.1, E-7.1 / TRD 5.4 (localStorage 유지 + sync 권장)
-- **작업:** localStorage와 병행/동기화, 연결 실패 시 localStorage 계속 + 안내
-- **완료:** README에 동기화 전략(A/B 중 선택) 명시, E-7.1 만족
+- **근거:** PRD F-7.1, E-7.1·E-7.2 / TRD 5.4 (**전략 A**: Supabase 주 + localStorage 캐시)
+- **작업:** 시작 시 pull, 추가/삭제 시 upsert/delete, 실패 시 캐시 계속 + 안내, 다중 쓰기 안내
+- **완료:** README에 전략 A 명시, E-7.1·E-7.2 만족
 
 #### T-7.3 Vercel 배포 + env 설정 `[난이도: 4/10]`
 

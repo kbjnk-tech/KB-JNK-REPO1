@@ -18,6 +18,7 @@ alwaysApply: true
 
 - 환율·송금·수수료 계산 = entities / `shared/lib`·`config` **순수 함수**
 - localStorage·Supabase = features 또는 `shared` 인프라 (entities와 섞지 않음)
+  - **채택:** Supabase 주 저장 + localStorage 캐시/오프라인
 - `shared/api`·`shared/supabase` = FE↔외부 통신 (`25-client-infra`)
 
 ## 작업 범위

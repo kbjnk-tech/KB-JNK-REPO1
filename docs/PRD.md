@@ -43,7 +43,7 @@
 2. 매매기준율·스프레드율·우대율·금액을 입력해 적용환율과 원화 금액을 확인한다. (실시간 환율 API로 기준율 자동 채움 가능)
 3. 해외송금이면 전신환 적용환율 + 송금수수료 + 전신료로 **총 출금액**을 확인한다.
 4. 확정 거래를 기록에 등록하고, 키워드로 검색·삭제하며, 필요 시 CSV 내보내기 또는 인쇄한다.
-5. 새로고침 후에도 기록이 유지되며(localStorage), 클라우드(Supabase)에도 동기화할 수 있다.
+5. 새로고침 후에도 기록이 유지된다. **주 저장소는 Supabase**이며, 실패·오프라인 시 **localStorage 캐시**로 계속 사용할 수 있다.
 6. 창구·모바일 환경에 맞춰 반응형 레이아웃과 다크모드를 사용할 수 있다.
 
 ---
@@ -56,7 +56,7 @@
 |----|------|
 | MVP-1 | 환전 계산기 (현찰 살 때 / 팔 때) |
 | MVP-2 | 거래 기록 추가 / 삭제 / 키워드 검색 |
-| MVP-3 | localStorage 영속화 |
+| MVP-3 | localStorage 캐시(오프라인·fallback) + (가산) Supabase 주 저장 |
 | MVP-4 | 단일 대시보드 UI (React + Vite + TS + Tailwind) |
 | MVP-5 | FSD 아키텍처 + `.cursor/rules` + `docs/` + `README.md` |
 
@@ -71,7 +71,7 @@
 | ADV-5 | CodeRabbit | GitHub + `.coderabbit.yaml`, 기능 단위 PR 자동 리뷰 |
 | ADV-6 | MCP 표준 공유 | `.cursor/mcp.json` (filesystem, context7 등) |
 | ADV-7 | Custom Mode | Plan / Implement / Review 분리 |
-| ADV-8 | Supabase 연동 | 거래 기록 클라우드 저장 |
+| ADV-8 | Supabase 연동 | 거래 기록 **주 저장소** (localStorage는 캐시/오프라인) |
 | ADV-9 | Vercel 배포 | 실제 URL 제공 |
 | ADV-10 | 반응형 레이아웃 | 모바일~데스크톱 브레이크포인트 |
 | ADV-11 | 다크모드 | 테마 토글 + localStorage 유지 |
@@ -99,7 +99,7 @@
 | F-2.1 | 기록 추가: 고객명, 통화, 금액, 메모 등 (계산 결과 필드 포함 가능) |
 | F-2.2 | 개별 삭제 |
 | F-2.3 | 키워드 검색: 고객명·통화·메모 |
-| F-2.4 | `localStorage`로 새로고침·창 닫아도 유지 |
+| F-2.4 | `localStorage` 캐시로 오프라인·연결 실패 시에도 목록 유지 (주 저장은 F-7.1) |
 
 ### 4.3 대시보드 UI (필수) — F-3
 
@@ -149,7 +149,7 @@
 
 | ID | 요구사항 |
 |----|----------|
-| F-7.1 | Supabase에 거래 기록 저장/조회 (localStorage와 병행 또는 동기화 전략을 README에 명시) |
+| F-7.1 | Supabase를 **주 저장소**로 저장/조회. localStorage는 캐시·오프라인 fallback. 전략을 README에 명시 |
 | F-7.2 | Vercel 배포로 공개 URL 제공, README에 URL 기재 |
 
 ### 4.8 조직·협업 산출물 (가산·구현) — F-8
@@ -182,7 +182,8 @@
 | E-1.5 | 숫자 필드에 문자·특수문자 | 숫자만 허용 또는 무시 |
 | E-2.1 | 빈 내용으로 거래 기록 추가 | 추가 거부 + 안내 |
 | E-5.1 | 환율 API 실패 | 수동 입력 유지 + 오류 안내 |
-| E-7.1 | Supabase 연결 실패 | localStorage로 계속 사용 가능 + 안내 |
+| E-7.1 | Supabase 연결 실패·키 없음·테이블 없음 | localStorage 캐시로 계속 사용 가능 + 안내 |
+| E-7.2 | 여러 기기·탭에서 동시 수정 | 마지막 쓰기 기준(안내). 충돌 병합은 범위 밖 |
 
 ---
 
@@ -221,7 +222,7 @@
 | 동작 | 예상 결과 |
 |------|-----------|
 | 기록 2~3개 추가 | 목록에 즉시 표시 |
-| 새로고침 | localStorage로 유지 |
+| 새로고침 | Supabase 주 저장 기준 유지 (실패 시 localStorage 캐시) |
 | 키워드 검색 | 해당 기록만 필터 |
 | 삭제 후 새로고침 | 삭제 상태 유지 |
 | 빈 내용 추가 | 거부 |
@@ -238,7 +239,7 @@
 | CodeRabbit | PR에서 자동 리뷰 수신 이력 |
 | MCP | `.cursor/mcp.json` 존재, context7 등 사용 가능 |
 | Custom Mode | WORKFLOW/prompts에 Plan·Implement·Review 기록 |
-| Supabase | 클라우드에 기록 저장·조회 가능 |
+| Supabase | 주 저장소로 기록 저장·조회. 실패 시 캐시 fallback |
 | Vercel | 배포 URL에서 핵심 기능 동작 |
 | UI 확장 | 반응형·다크모드·인쇄(F-9) 수동 확인 |
 
