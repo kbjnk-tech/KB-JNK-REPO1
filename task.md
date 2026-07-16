@@ -229,7 +229,7 @@
 
 - **근거:** PRD ADV-11, F-9.2 / TRD 5.3
 - **작업:** `ThemeToggle` + `html.dark` + Tailwind dark variant, `shared/lib` 테마 localStorage
-- **완료:** 토글·새로고침 후 테마 유지 (미선택 시 OS 선호 가능)
+- **완료:** 토글·새로고침 후 테마 유지
 
 #### T-3C.3 거래 기록 인쇄 `[난이도: 3/10]`
 
@@ -269,7 +269,7 @@
 ### Phase 5 체크리스트
 
 - [x] T-5.1 `.coderabbit.yaml` + GitHub remote push
-- [ ] T-5.2 기능 단위 PR + CodeRabbit 리뷰 ← PR `docs/sync-ui-extension` 진행 중
+- [x] T-5.2 기능 단위 PR + CodeRabbit 리뷰 (PR #1)
 
 | ID | Task | 난이도 | 근거 | 완료 기준 |
 |----|------|--------|------|-----------|
