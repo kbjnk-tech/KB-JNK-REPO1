@@ -10,6 +10,7 @@
 | UI | React 19 + Vite + TypeScript + Tailwind CSS v4 |
 | 상태 | useState / useReducer (필요 시 Context) |
 | 영속화 | localStorage (기본) + Supabase (가산) |
+| UI 확장 | 반응형 · 다크모드(`html.dark`) · 인쇄(`@media print`) |
 | 테스트 | Vitest |
 | 배포 | Vercel |
 
@@ -58,9 +59,10 @@ src/
 | Phase | 내용 |
 |-------|------|
 | 0 | 환경·계정·키 |
-| 1 | 스캐폴드·FSD·docs·Rules·MCP (본 문서 시점) |
+| 1 | 스캐폴드·FSD·docs·Rules·MCP |
 | 2 | 도메인 + TDD |
 | 3 | features/widgets/dashboard |
+| 3C | UI 확장: 반응형·다크모드·인쇄 (PRD F-9) |
 | 4 | 환율 API |
 | 5 | CodeRabbit |
 | 6 | Custom Mode·문서 |

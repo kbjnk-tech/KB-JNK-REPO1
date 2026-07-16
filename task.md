@@ -269,7 +269,7 @@
 ### Phase 5 체크리스트
 
 - [x] T-5.1 `.coderabbit.yaml` + GitHub remote push
-- [ ] T-5.2 기능 단위 PR + CodeRabbit 리뷰
+- [ ] T-5.2 기능 단위 PR + CodeRabbit 리뷰 ← PR `docs/sync-ui-extension` 진행 중
 
 | ID | Task | 난이도 | 근거 | 완료 기준 |
 |----|------|--------|------|-----------|
