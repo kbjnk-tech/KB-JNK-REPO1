@@ -1,0 +1,26 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: ko-KR
+reviews:
+  profile: chill
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: true
+  path_filters:
+    - '!dist/**'
+    - '!node_modules/**'
+    - '!package-lock.json'
+  path_instructions:
+    - path: 'src/entities/**'
+      instructions: |
+        환율·송금 계산은 순수 함수여야 합니다. UI/API/localStorage 혼입 금지.
+        PRD 인수 수치(반올림 순서, JPY unit=100)를 깨뜨리는 변경을 지적하세요.
+    - path: 'src/features/**'
+      instructions: |
+        FSD: 동일 레이어 슬라이스 간 import 금지. Public API(index.ts)만 노출.
+    - path: 'src/shared/api/**'
+      instructions: |
+        entities에 API 호출이 들어가지 않았는지 확인. 실키 하드코딩 금지.
+chat:
+  auto_reply: true

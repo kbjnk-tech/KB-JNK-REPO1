@@ -1,0 +1,32 @@
+---
+description: FSD 아키텍처 — 레이어 의존·Public API·작업 범위
+alwaysApply: true
+---
+
+# FSD Architecture
+
+레이어(상위 → 하위만): `app → pages → widgets → features → entities → shared`
+
+## 의존 (필수)
+
+- 역방향 import 금지 · **동일 레이어 슬라이스 간 import 금지**
+- 외부는 슬라이스 `index.ts`(Public API)만. Deep import 금지
+- 역할에 맞는 레이어에 배치. 위반 시 **생성 중단**하고 구조 수정 제안
+- 새 파일 위치: 화면 조합→pages/widgets, 유스케이스→features, 도메인→entities, 공통→shared
+
+## 저장·통신 경계
+
+- 환율·송금·수수료 계산 = entities / `shared/lib`·`config` **순수 함수**
+- localStorage·Supabase = features 또는 `shared` 인프라 (entities와 섞지 않음)
+- `shared/api`·`shared/supabase` = FE↔외부 통신 (`25-client-infra`)
+
+## 작업 범위
+
+- **요청 Task/슬라이스 밖 수정 금지.** 필요 시 범위 먼저 확인
+- feature 작업 시 `40`~`43` 허용 경로만. 타 feature·도메인 공식 무단 변경 금지
+
+```ts
+// ✅ import { ExchangePanel } from '@/widgets/exchange-panel'
+// ❌ from '@/entities/rate/model/calc'  // deep import
+// ❌ features/calculate-exchange → features/export-csv  // 동일 레이어
+```

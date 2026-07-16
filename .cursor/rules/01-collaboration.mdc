@@ -1,0 +1,31 @@
+---
+description: 협업 Always Apply — 워크플로우·시크릿·MCP·PR 단위
+alwaysApply: true
+---
+
+# Collaboration Workflow
+
+도메인 공식·UI 디테일은 file-specific 룰에 맡긴다. 이 룰은 **협업 가드레일만**.
+
+## 모드 (Plan → Implement → Review)
+
+| Mode | 할 일 | 하지 말 것 |
+|------|--------|------------|
+| Plan | 범위·파일·리스크·검증 (`docs/prompts.md`) | 대량 코드 변경 |
+| Implement | 허용 glob만, FSD·feature 룰 준수 | 무관 리팩터·실키 노출 |
+| Review | FSD·PRD 인수·테스트·범위 일탈 | 새 기능 추가만 |
+
+상세: `docs/WORKFLOW.md`
+
+## 시크릿·도구
+
+- 키: `.env` / Vercel env만. **git 커밋·채팅 출력 금지** (`.env.example`은 이름만)
+- MCP: context7로 React/Vite/Supabase 등 최신 API 확인
+- CodeRabbit: 기능 단위 PR (한 PR = 한 feature/관심사 권장)
+
+## 실행 규칙
+
+- `npm install` 등 패키지 설치는 **개발자 실행·확인**
+- 큰 다파일은 Agent 위임 가능 — Plan에서 허용 경로 확정 후
+- file-specific **허용/금지 경로**를 넘지 않는다
+- 정본 문서: `prd.md`, `trd.md`, `task.md`

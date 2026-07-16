@@ -1,0 +1,31 @@
+---
+description: Feature 거래기록 — add/search + history panel + localStorage
+globs: src/features/add-transaction/**,src/features/search-transaction/**,src/widgets/transaction-history-panel/**
+alwaysApply: false
+---
+
+# Feature: Transactions
+
+## 허용 / 금지
+
+- 허용: add-transaction, search-transaction, transaction-history-panel (+ 영속화 모듈만)
+- 금지: 환전/송금 **공식** 변경, CSV 본문, Supabase 클라이언트 본문
+
+## 기능 (PRD F-2 / MVP-3)
+
+- 추가: 고객명·통화·금액·메모·계산 결과 필드(`Transaction` 스키마)
+- 삭제: 개별 · 검색: 고객명·통화·메모 키워드
+- **localStorage** 영속화 — 새로고침·재오픈 후 유지 (§6.3)
+- type: `'buy' | 'sell' | 'remit'` · id·createdAt(ISO) 포함
+
+## 예외·인수
+
+- E-2.1 빈 내용 추가 → 거부 + 안내
+- 추가 즉시 목록 반영 · 삭제 후 새로고침에도 삭제 유지
+- 저장 시 원화/적용환율 **재계산 복제 금지** — 확정된 계산 결과만 저장
+- 클라우드 sync는 `25`/`sync-supabase` 범위 (여기선 localStorage 우선)
+
+```ts
+// ✅ push({ ...domainResult, customerName, memo })
+// ❌ krwAmount = amount * base * (1+spread/100) // 저장 경로 재계산
+```

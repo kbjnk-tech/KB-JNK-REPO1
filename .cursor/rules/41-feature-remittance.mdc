@@ -1,0 +1,29 @@
+---
+description: Feature 해외송금 — calculate-remittance + remittance-panel만
+globs: src/features/calculate-remittance/**,src/widgets/remittance-panel/**
+alwaysApply: false
+---
+
+# Feature: Remittance
+
+## 허용 / 금지
+
+- 허용: `features/calculate-remittance/**`, `widgets/remittance-panel/**`
+- 금지: 환전·거래·CSV·sync 수정 · 수수료 표 feature 하드코딩
+
+## 기능 (PRD F-4 / ADV-1)
+
+- 전신환 스프레드 기본 **1.0%** (`DEFAULT_REMIT_SPREAD`)
+- 총 출금액 = 원화 송금원금 + `getRemittanceFee(USD)` + 전신료 **8,000**/건
+- 수수료·전신료는 `shared/config`만 사용 — **README와 동일 소스**
+- 인수: $3000 / B=1320 / P=0% → 적용 1333.20 · 원금 3,999,600 · 수수료 15,000 · 전신료 8,000 → **4,022,600**
+
+## 예외
+
+- 입력 검증은 환전과 동일 계열(E-1.x) 적용
+- 계산은 entities/config 호출만. Public API(`index.ts`)만 외부 노출
+
+```ts
+// ✅ getRemittanceFee + TELEGRAPHIC_FEE from '@/shared/config'
+// ❌ if (usd > 2000) fee = 15000 // feature 구간표 복제
+```

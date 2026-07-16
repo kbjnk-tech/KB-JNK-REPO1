@@ -1,0 +1,33 @@
+---
+description: UI — pages/widgets/shared/ui만 (features 제외)
+globs: src/pages/**,src/widgets/**,src/shared/ui/**
+alwaysApply: false
+---
+
+# UI
+
+features 로직은 `40`~`43`. 이 룰은 **표시·입력 셸**만.
+
+## 허용 / 금지
+
+- 허용: `pages/**`, `widgets/**`, `shared/ui/**`
+- 금지: entities 공식 변경, api/supabase 클라이언트·스키마 변경, 타 feature 무단 수정
+
+## UX·상태
+
+- 함수형 + `useState`/`useReducer` (필요 시 Context)
+- UI 텍스트 **한국어** · 금액/환율 표시는 `shared/lib` 포맷만
+- **JSX 인라인 계산 금지** → entities / feature Public API
+- 숫자 필드: 문자·특수문자 무시 또는 숫자만 (E-1.5)
+- 매매기준율·금액이 빈값·0·음수·문자면 **계산하지 않고 안내** (E-1.1)
+- 우대율 0%=정상(스프레드 전액), 100%=기준율, 범위 밖=제한/안내 (E-1.2~1.4)
+
+## 패널 배치 (대시보드)
+
+- 환전: `exchange-panel` · 송금: `remittance-panel` · 기록: `transaction-history-panel`
+- 탭/한 화면 구성은 pages에서 widgets 조합
+
+```tsx
+// ✅ const r = calculateExchange(form); return <p>{formatKrw(r.krw)}</p>
+// ❌ const krw = Math.round(amount * base * (1 + spread/100))
+```

@@ -1,0 +1,29 @@
+---
+description: Feature CSV 내보내기 — 변환·다운로드만
+globs: src/features/export-csv/**
+alwaysApply: false
+---
+
+# Feature: Export CSV
+
+## 허용 / 금지
+
+- 허용: `features/export-csv/**` 만
+- 금지: 환율·수수료 계산, DB 스키마, 다른 feature·widget 수정
+
+## 기능 (PRD F-6 / ADV-3)
+
+- 입력: 현재(또는 필터된) `Transaction[]`
+- 처리: CSV 문자열 생성 → Blob → 브라우저 다운로드
+- 인코딩: **UTF-8 BOM** 권장 (한글 깨짐 방지)
+- **도메인 계산 없음** — 필드 직렬화·파일 생성만
+- 인수: 다운로드 파일 내용이 목록과 일치 (§6.3)
+
+## Public API
+
+- `index.ts`로만 노출 (예: `exportTransactionsCsv(rows)`)
+
+```ts
+// ✅ downloadCsv('\uFEFF' + toCsv(rows))
+// ❌ row.krwAmount = applyExchangeRate(...) // export 중 재계산
+```

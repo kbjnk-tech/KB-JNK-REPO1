@@ -1,0 +1,31 @@
+---
+description: Feature 환전 — calculate-exchange + exchange-panel만
+globs: src/features/calculate-exchange/**,src/widgets/exchange-panel/**
+alwaysApply: false
+---
+
+# Feature: Exchange
+
+## 허용 / 금지
+
+- 허용: `features/calculate-exchange/**`, `widgets/exchange-panel/**`
+- 금지: 송금·거래·CSV·sync 슬라이스, entities 공식 **복제**
+
+## 기능 (PRD F-1)
+
+- 통화: USD·JPY·EUR·CNY · 구분: 현찰 살 때 / 팔 때
+- 입력: 매매기준율·스프레드(기본 **1.75%**·변경 가능)·우대율·외화 금액
+- 출력: 적용환율(소수 2)·원화(정수+콤마+원) — entities 호출 결과만 표시
+- JPY: 고시 unit=100 (entities/currency)
+
+## 예외 (E-1.x)
+
+- E-1.1 빈값·0·음수·문자 → 계산 안 함 + 안내
+- E-1.2 우대 0% 정상 · E-1.3 100% → 기준율 · E-1.4 범위 제한
+- E-1.5 숫자 외 입력 무시/차단
+- API 연동 시 실패 fallback은 UI에서 (E-5.1), 계산식은 entities
+
+```ts
+// ✅ import { applyExchangeRate, exchangeToKRW } from '@/entities/rate'
+// ❌ feature 내부에 B*(1+S/100) 재구현
+```
