@@ -17,7 +17,7 @@
 | Language & Framework | **React 19**, TypeScript, Vite                 |
 | Styling              | TailwindCSS                                    |
 | State                | React `useState` / `useReducer` (필요 시 Context) |
-| Persistence (기본)     | **Supabase** 주 저장 + `localStorage` 캐시/오프라인 |
+| Persistence (기본)     | `localStorage` (필수) + (선택) Supabase 자동 동기화 |
 | AI IDE               | Cursor Pro (권장: Claude Sonnet 4.6)             |
 
 
@@ -33,7 +33,7 @@
 | FX API      | 공개 환율 API (예: 한국수출입은행)                          | 매매기준율 자동 채움      |
 | CSV         | 클라이언트 파일 생성                                     | 거래 기록 내보내기       |
 | UI UX       | Tailwind 반응형 · `dark` 클래스 · `@media print`      | 반응형·다크모드·인쇄     |
-| Cloud DB    | **Supabase**                                    | 거래 기록 **주 저장소**   |
+| Cloud DB    | **Supabase** (선택)                             | 거래 기록 클라우드 동기화 |
 | Deploy      | **Vercel**                                      | 공개 URL           |
 
 
@@ -298,11 +298,10 @@ export interface Transaction {
 
 - `shared/supabase`에서 클라이언트 생성
 - 테이블 예: `transactions` (Transaction 스키마 대응)
-- **채택 전략 A:** Supabase = 주 저장소, localStorage = 캐시/오프라인  
-  - (참고 B: localStorage 주 + 수동 sync — 미채택)
-- 앱 시작 시 클라우드 조회 → 실패·키 없음·테이블 없음이면 캐시 로드 + 안내 (**E-7.1**)
-- 추가/삭제는 클라우드 upsert/delete 시도, 실패해도 캐시로 계속 사용
-- 여러 기기·탭: **마지막 쓰기** 기준 (충돌 병합 없음, UI·README 안내) (**E-7.2**)
+- **저장 전략:** localStorage = 필수 영속화(명세서 1-2), Supabase = 선택 가산(자동 동기화)
+- env·테이블이 있으면 앱 시작 시 클라우드 조회 → 실패 시 localStorage 로드 + 안내 (**E-7.1**)
+- 추가/삭제는 localStorage 즉시 반영 후, 설정되어 있으면 클라우드 upsert/delete 시도
+- 수동 「클라우드 새로고침」「캐시 재업로드」 UI는 명세에 없어 두지 않음
 
 ### 5.5 CodeRabbit / MCP / Custom Mode / Vercel
 
@@ -384,7 +383,7 @@ export interface Transaction {
 
 | 산출물                            | 구분    |
 | ------------------------------ | ----- |
-| 환전 계산기 + 거래 기록 + localStorage 캐시 | 필수    |
+| 환전 계산기 + 거래 기록 + localStorage | 필수    |
 | FSD + Rules + docs + README    | 필수    |
 | 해외송금 계산기                       | 가산·구현 |
 | 환율 API / CSV                   | 가산·구현 |

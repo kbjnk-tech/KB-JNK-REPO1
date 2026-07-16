@@ -23,7 +23,7 @@ alwaysApply: false
 - E-2.1 빈 내용 추가 → 거부 + 안내
 - 추가 즉시 목록 반영 · 삭제 후 캐시/클라우드에도 반영 시도
 - 저장 시 원화/적용환율 **재계산 복제 금지** — 확정된 계산 결과만 저장
-- **주 저장소(Supabase)** 는 `25`/`sync-supabase` 범위. 이 feature는 목록 UI·검증·캐시
+- **Supabase 동기화** 는 `25`/`sync-supabase` 범위. 이 feature는 목록 UI·검증·localStorage
 
 ```ts
 // ✅ push({ ...domainResult, customerName, memo })

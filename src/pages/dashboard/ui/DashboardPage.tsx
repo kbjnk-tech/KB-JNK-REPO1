@@ -3,22 +3,20 @@ import type { Transaction } from '@/entities/transaction'
 import {
   deleteTransactionFromCloud,
   pullTransactionsFromCloud,
-  pushTransactionsToCloud,
   upsertTransactionToCloud,
 } from '@/features/sync-supabase'
 import { ExchangePanel } from '@/widgets/exchange-panel'
 import { RemittancePanel } from '@/widgets/remittance-panel'
 import { TransactionHistoryPanel } from '@/widgets/transaction-history-panel'
 import { loadTransactions, saveTransactions } from '@/shared/lib'
-import { Button, Tabs, ThemeToggle } from '@/shared/ui'
+import { Tabs, ThemeToggle } from '@/shared/ui'
 
 type CalcTab = 'exchange' | 'remittance'
 
 export function DashboardPage() {
   const [tab, setTab] = useState<CalcTab>('exchange')
   const [transactions, setTransactions] = useState<Transaction[]>([])
-  const [syncMessage, setSyncMessage] = useState<string | null>(null)
-  const [syncing, setSyncing] = useState(false)
+  const [statusMessage, setStatusMessage] = useState<string | null>(null)
   const [booting, setBooting] = useState(true)
 
   useEffect(() => {
@@ -32,12 +30,14 @@ export function DashboardPage() {
       if (remote.ok) {
         setTransactions(remote.rows)
         saveTransactions(remote.rows)
-        setSyncMessage(remote.message)
+        setStatusMessage(null)
       } else {
         const cached = loadTransactions()
         setTransactions(cached)
-        setSyncMessage(
-          `${remote.message} (캐시 ${cached.length}건 · env/테이블을 확인하세요.)`,
+        setStatusMessage(
+          remote.message
+            ? `${remote.message} (${cached.length}건)`
+            : null,
         )
       }
       setBooting(false)
@@ -49,47 +49,22 @@ export function DashboardPage() {
     }
   }, [])
 
-  /** 화면 + localStorage 캐시 즉시 반영 (주 저장소 실패해도 오프라인 사용) */
-  function persistCache(next: Transaction[]) {
+  /** 화면 + localStorage 즉시 반영 (필수: 새로고침 유지) */
+  function persistLocal(next: Transaction[]) {
     setTransactions(next)
     saveTransactions(next)
   }
 
   async function handleSave(tx: Transaction) {
-    const next = [tx, ...transactions]
-    persistCache(next)
+    persistLocal([tx, ...transactions])
     const result = await upsertTransactionToCloud(tx)
-    setSyncMessage(
-      result.ok
-        ? result.message
-        : `${result.message} 여러 기기에서는 마지막 쓰기가 남을 수 있습니다.`,
-    )
+    setStatusMessage(result.ok ? null : result.message)
   }
 
   async function handleDelete(id: string) {
-    const next = transactions.filter((t) => t.id !== id)
-    persistCache(next)
+    persistLocal(transactions.filter((t) => t.id !== id))
     const result = await deleteTransactionFromCloud(id)
-    setSyncMessage(result.message)
-  }
-
-  async function handleRefreshFromCloud() {
-    setSyncing(true)
-    const result = await pullTransactionsFromCloud()
-    if (result.ok) {
-      persistCache(result.rows)
-      setSyncMessage(result.message)
-    } else {
-      setSyncMessage(result.message)
-    }
-    setSyncing(false)
-  }
-
-  async function handleReuploadCache() {
-    setSyncing(true)
-    const result = await pushTransactionsToCloud(transactions)
-    setSyncMessage(result.message)
-    setSyncing(false)
+    setStatusMessage(result.ok ? null : result.message)
   }
 
   return (
@@ -104,38 +79,20 @@ export function DashboardPage() {
               대시보드
             </h1>
             <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-              환전·해외송금 계산과 거래 기록을 한 화면에서 관리합니다. 주 저장소는
-              Supabase이며, 실패·오프라인 시 localStorage 캐시로 계속 사용할 수
-              있습니다. 여러 기기에서는 마지막 쓰기가 남을 수 있습니다.
+              환전·해외송금 계산과 거래 기록을 한 화면에서 관리합니다. 기록은
+              localStorage에 저장되며, Supabase가 설정되어 있으면 클라우드에도
+              자동 반영됩니다.
             </p>
           </div>
           <ThemeToggle />
         </div>
-        <div className="mt-3 flex flex-wrap gap-2">
-          <Button
-            type="button"
-            className="bg-slate-700 hover:bg-slate-800 dark:bg-slate-600 dark:hover:bg-slate-500"
-            onClick={handleRefreshFromCloud}
-            disabled={syncing || booting}
-          >
-            클라우드에서 새로고침
-          </Button>
-          <Button
-            type="button"
-            className="bg-slate-600 hover:bg-slate-700 dark:bg-slate-500 dark:hover:bg-slate-400"
-            onClick={handleReuploadCache}
-            disabled={syncing || booting}
-          >
-            캐시 재업로드
-          </Button>
-        </div>
         {booting ? (
           <p className="mt-2 text-sm text-slate-600 dark:text-slate-400" role="status">
-            클라우드에서 기록을 불러오는 중…
+            기록을 불러오는 중…
           </p>
-        ) : syncMessage ? (
+        ) : statusMessage ? (
           <p className="mt-2 text-sm text-slate-600 dark:text-slate-400" role="status">
-            {syncMessage}
+            {statusMessage}
           </p>
         ) : null}
       </header>
