@@ -298,6 +298,12 @@
 
 > **원 난이도 9** → Sub-task 분리
 
+### Phase 7 체크리스트
+
+- [x] T-7.1 Supabase 클라이언트·`transactions` 테이블 (프로젝트 `excahngemoney`, RLS·anon upsert/select 확인)
+- [x] T-7.2 `features/sync-supabase` + 오프라인 fallback (README 전략 B, 실동기화 OK)
+- [x] T-7.3 Vercel 배포 + env — https://kb-fx-teller-helper.vercel.app
+
 ### T-7 — 클라우드 저장 · 배포 (분리됨)
 
 #### T-7.1 Supabase 클라이언트·`transactions` 테이블 `[난이도: 5/10]`
@@ -317,6 +323,7 @@
 - **근거:** PRD ADV-9, F-7.2 / TRD Phase 7
 - **작업:** Git 연동 배포, API·Supabase env 등록
 - **완료:** 공개 URL에서 환전·기록 등 핵심 기능 동작, README에 URL 기재
+  - URL: https://kb-fx-teller-helper.vercel.app
 
 ---
 

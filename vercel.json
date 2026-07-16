@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/exim/:path*",
+      "destination": "https://oapi.koreaexim.go.kr/site/program/financial/:path*"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
+    }
+  ]
+}

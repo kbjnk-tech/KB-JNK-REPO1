@@ -89,11 +89,13 @@ create policy "Allow anon delete transactions"
 
 ## 배포 (Vercel)
 
-1. GitHub `KB-JNK-REPO1` 연동
+1. GitHub `KB-JNK-REPO1` 연동 (또는 CLI `vercel --prod`)
 2. Environment Variables에 위 `VITE_*` 등록
 3. 배포 URL을 이 README에 기재
 
-**배포 URL:** _(배포 후 기입)_
+**배포 URL:** https://kb-fx-teller-helper.vercel.app
+
+환율 API는 프로덕션에서 `/api/exim/*` → 한국수출입은행 OpenAPI 로 rewrite (`vercel.json`) 합니다.
 
 ## 검증
 
